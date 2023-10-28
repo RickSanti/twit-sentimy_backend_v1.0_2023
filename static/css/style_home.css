@@ -277,7 +277,8 @@ body.dark {
   width: 100%;
   padding: 15px 50px;
   background-color: var(--grey-color-light);
-  text-align: right;
+  text-align: center;
+  align-items: center;
 }
 
 .invisible {
