@@ -39,10 +39,13 @@ def login_():
     elif request.form.get('formu') == '2':
 
         new_user = request.form.get('usuario_new')
+        new_name = request.form.get('nombre_new')
+        new_lastname = request.form.get('apellido_new')
+        new_birthday = request.form.get('cumple_new')
         new_pass = request.form.get('contrasena_new')
 
         url = 'http://127.0.0.1:3000/api/user'
-        data = {"username": new_user, "password": new_pass}
+        data = {"username": new_user, "password": new_pass, "name_profile": new_name, "lastname": new_lastname, "birthdate": new_birthday}
         headers = {'Content-Type': 'application/json'}
 
         requests.post(url=url,data=json.dumps(data), headers=headers)
