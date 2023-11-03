@@ -80,19 +80,16 @@ def home_admin_post():
 
     data = requests.post(url=url, data=json.dumps(body), headers=headers).json()
 
-    #tweet_cont = data["tweet_text"]
-    #polaridad = data["polarity"]
-    #resumen = data["summary"]
-    #top_pos = data["top_3_positives"]
-    #top_neg = data["top_3_negatives"]
-
-    return render_template('home_admin.html', user=user,
-                           tweet_cont = data["tweet_text"],
-                           polaridad = data["polarity"],
-                           resumen = data["summary"],
-                           top_pos = data["top_3_positives"],
-                           top_neg = data["top_3_negatives"]
-                           )
+    if list(data.keys())[0] == 'message_error':
+        return redirect('/home_admin')
+    else:
+        return render_template('home_admin.html', user=user,
+                               tweet_cont = data["tweet_text"],
+                               polaridad = data["polarity"],
+                               resumen = data["summary"],
+                               top_pos = data["top_3_positives"],
+                               top_neg = data["top_3_negatives"]
+                               )
 
 @app.route('/home_basic', methods=["GET"])
 def home_basic():
