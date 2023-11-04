@@ -1,105 +1,190 @@
 from flask import Flask, render_template, request, redirect, session
 import requests
 import json
-
+import plotly.express as px
 
 app = Flask(__name__)
 
 app.secret_key = 'clave_secreta_temporal'
 
 global web_rol_id
+global web_id_user
 global web_user
 global web_pass
+global web_name_profile
 
-@app.route('/', methods=["GET"])
-def login_get():
-    return render_template('index.html')
+@app.route('/', methods=["GET","POST"])
+def login():
+    if request.method == "GET":
+        return render_template('index.html')
+    elif request.method == "POST":
+        if request.form.get('formu') == '1':
 
-@app.route('/', methods=["POST"])
-def login_post():
+            web_user = request.form.get('usuario')
+            web_pass = request.form.get('contrasena')
 
-    if request.form.get('formu') == '1':
+            url = 'http://127.0.0.1:3000/api/login/' + web_user + '/' + web_pass
+            response = requests.get(url)
 
-        web_user = request.form.get('usuario')
-        web_pass = request.form.get('contrasena')
+            data = response.json()
+            web_rol_id = data['idRole']
+            web_name_profile = data['name_profile']
+            web_id_user = data['idUser']
 
-        url = 'http://127.0.0.1:3000/api/login/' + web_user + '/' + web_pass
-        response = requests.get(url)
+            if response.status_code == 200:
 
-        data = response.json()
-        web_rol_id = data['idRole']
+                if list(data.keys())[0] == 'message_error':
+                    return render_template('index.html')
 
-        if response.status_code == 200:
+                if web_rol_id == 1:
+                    session['user'] = web_user
+                    session['profile'] = web_name_profile
+                    return redirect("/home_admin")
+                elif web_rol_id == 2:
+                    session['user'] = web_user
+                    session['profile'] = web_name_profile
+                    session['id_user'] = web_id_user
+                    return redirect("/home_basic")
+                elif web_rol_id == 3:
+                    session['user'] = web_user
+                    session['profile'] = web_name_profile
+                    return redirect("/home_premium")
+            else:
+                print(f'Error: {response.status_code}')
 
-            if list(data.keys())[0] == 'message_error':
-                return render_template('index.html')
+        elif request.form.get('formu') == '2':
 
-            if web_rol_id == 1:
-                session['user'] = web_user
-                return redirect("/home_admin")
-            elif web_rol_id == 2:
-                session['user'] = web_user
-                return redirect("/home_basic")
-            elif web_rol_id == 3:
-                session['user'] = web_user
-                return redirect("/home_premium")
-        else:
-            print(f'Error: {response.status_code}')
+            new_user = request.form.get('usuario_new')
+            new_name = request.form.get('nombre_new')
+            new_lastname = request.form.get('apellido_new')
+            new_birthday = request.form.get('cumple_new')
+            new_pass = request.form.get('contrasena_new')
 
-    elif request.form.get('formu') == '2':
+            url = 'http://127.0.0.1:3000/api/user'
+            body = {"username": new_user, "password": new_pass, "name_profile": new_name, "lastname": new_lastname,
+                    "birthdate": new_birthday}
+            headers = {'Content-Type': 'application/json'}
 
-        new_user = request.form.get('usuario_new')
-        new_name = request.form.get('nombre_new')
-        new_lastname = request.form.get('apellido_new')
-        new_birthday = request.form.get('cumple_new')
-        new_pass = request.form.get('contrasena_new')
+            requests.post(url=url, data=json.dumps(body), headers=headers)
 
-        url = 'http://127.0.0.1:3000/api/user'
-        body = {"username": new_user, "password": new_pass, "name_profile": new_name, "lastname": new_lastname, "birthdate": new_birthday}
+            return redirect("http://127.0.0.1:5000/home_basic")
+
+@app.route('/home_admin', methods=["GET","POST"])
+def home_admin():
+    if request.method == "GET":
+        user = session.get('profile')
+        return render_template('home_admin.html', user=user)
+    elif request.method == "POST":
+        user = session.get('profile')
+        web_id_user_home = request.form.get('id_user_home')
+        web_id_tweet_home = request.form.get('id_tweet_home')
+        web_name_tweet_home = request.form.get('name_tweet_home')
+
+        url = 'http://127.0.0.1:3000/api/search'
+        body = {"idUser": web_id_user_home, "identifier": web_id_tweet_home, "name_tweet": web_name_tweet_home}
         headers = {'Content-Type': 'application/json'}
 
-        requests.post(url=url,data=json.dumps(body), headers=headers)
+        data = requests.post(url=url, data=json.dumps(body), headers=headers).json()
 
-        return redirect("http://127.0.0.1:5000/home_basic")
+        if list(data.keys())[0] == 'message_error':
+            return redirect('/home_admin')
+        else:
+            porc_neg = data["negative_percentage"]
+            porc_neutro = data["neutral_percentage"]
+            porc_pos = data["positive_percentage"]
 
-@app.route('/home_admin', methods=["GET"])
-def home_admin_get():
-    user = session.get('user')
-    return render_template('home_admin.html', user=user)
+            grafico_html = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+            return render_template('home_admin.html', user=user, grafico_html=grafico_html,
+                                   tweet_cont=data["tweet_text"],
+                                   polaridad=data["polarity"],
+                                   resumen=data["summary"],
+                                   top_pos=data["top_3_positives"],
+                                   top_neg=data["top_3_negatives"]
+                                   )
 
-@app.route('/home_admin', methods=["POST"])
-def home_admin_post():
-    user = session.get('user')
-    web_id_user_home = request.form.get('id_user_home')
-    web_id_tweet_home = request.form.get('id_tweet_home')
-    web_name_tweet_home = request.form.get('name_tweet_home')
-
-    url = 'http://127.0.0.1:3000/api/search'
-    body = {"idUser": web_id_user_home, "identifier": web_id_tweet_home, "name_tweet": web_name_tweet_home}
-    headers = {'Content-Type': 'application/json'}
-
-    data = requests.post(url=url, data=json.dumps(body), headers=headers).json()
-
-    if list(data.keys())[0] == 'message_error':
-        return redirect('/home_admin')
-    else:
-        return render_template('home_admin.html', user=user,
-                               tweet_cont = data["tweet_text"],
-                               polaridad = data["polarity"],
-                               resumen = data["summary"],
-                               top_pos = data["top_3_positives"],
-                               top_neg = data["top_3_negatives"]
-                               )
-
-@app.route('/home_basic', methods=["GET"])
+@app.route('/home_basic', methods=["GET","POST"])
 def home_basic():
-    user = session.get('user')
-    return render_template('home_basic.html')
+    if request.method == "GET":
+        user = session.get('profile')
+        return render_template('home_basic.html', user=user)
+    elif request.method == "POST":
+        user = session.get('profile')
+        web_id_user_home = session.get('id_user')
+        web_id_tweet_home = request.form.get('id_tweet_home')
+        web_name_tweet_home = request.form.get('name_tweet_home')
 
-@app.route('/home_premium', methods=["GET"])
+        url = 'http://127.0.0.1:3000/api/search'
+        body = {"idUser": web_id_user_home, "identifier": web_id_tweet_home, "name_tweet": web_name_tweet_home}
+        headers = {'Content-Type': 'application/json'}
+
+        data = requests.post(url=url, data=json.dumps(body), headers=headers).json()
+
+        if list(data.keys())[0] == 'message_error':
+            return redirect('/home_basic')
+        else:
+            porc_neg = data["negative_percentage"]
+            porc_neutro = data["neutral_percentage"]
+            porc_pos = data["positive_percentage"]
+
+            grafico_html = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+
+            return render_template('home_basic.html', user=user, grafico_html=grafico_html,
+                                   tweet_cont=data["tweet_text"],
+                                   polaridad=data["polarity"],
+                                   resumen=data["summary"],
+                                   top_pos=data["top_3_positives"],
+                                   top_neg=data["top_3_negatives"]
+                                   )
+
+@app.route('/home_premium', methods=["GET","POST"])
 def home_premium():
-    user = session.get('user')
-    return render_template('home_premium.html')
+    if request.method == "GET":
+        user = session.get('profile')
+        return render_template('home_premium.html', user=user)
+    elif request.method == "POST":
+        user = session.get('profile')
+        web_id_user_home = session.get('id_user')
+        web_id_tweet_home = request.form.get('id_tweet_home')
+        web_name_tweet_home = request.form.get('name_tweet_home')
+
+        url = 'http://127.0.0.1:3000/api/search'
+        body = {"idUser": web_id_user_home, "identifier": web_id_tweet_home, "name_tweet": web_name_tweet_home}
+        headers = {'Content-Type': 'application/json'}
+
+        data = requests.post(url=url, data=json.dumps(body), headers=headers).json()
+
+        if list(data.keys())[0] == 'message_error':
+            return redirect('/home_premium')
+        else:
+            porc_neg = data["negative_percentage"]
+            porc_neutro = data["neutral_percentage"]
+            porc_pos = data["positive_percentage"]
+
+            grafico_html = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+
+            return render_template('home_premium.html', user=user, grafico_html=grafico_html,
+                                   tweet_cont=data["tweet_text"],
+                                   polaridad=data["polarity"],
+                                   resumen=data["summary"],
+                                   top_pos=data["top_3_positives"],
+                                   top_neg=data["top_3_negatives"]
+                                   )
+
+
+
+
+def mostrar_grafico(neg,neu,pos):
+    if neu >= 70:
+        data = {'Polaridad':['Negativo','Positivo'],
+                'Porcentaje':[neg,pos]}
+    else:
+        data = {'Polaridad': ['Negativo', 'Neutro', 'Positivo'],
+                'Porcentaje': [neg, neu, pos]}
+
+    fig = px.bar(data, x='Polaridad', y='Porcentaje')
+    grafico_html = fig.to_html(full_html=False)
+    return grafico_html
+
 
 
 

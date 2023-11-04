@@ -70,17 +70,16 @@
               <span class="navlink_icon">
                 <i class="bx bxs-magic-wand"></i>
               </span>
-                    <span class="navlink">Transaction</span>
+                    <span class="navlink">Profile</span>
                 </a>
             </li>
-            <!-- End -->
 
             <li class="item">
                 <a href="#" class="nav_link">
               <span class="navlink_icon">
                 <i class="bx bx-loader-circle"></i>
               </span>
-                    <span class="navlink">Tweet_user</span>
+                    <span class="navlink">Tweet User</span>
                 </a>
             </li>
             <li class="item">
@@ -88,17 +87,10 @@
               <span class="navlink_icon">
                 <i class="bx bx-filter"></i>
               </span>
-                    <span class="navlink">Filter</span>
+                    <span class="navlink">Transaction</span>
                 </a>
             </li>
-            <li class="item">
-                <a href="#" class="nav_link">
-              <span class="navlink_icon">
-                <i class="bx bx-cloud-upload"></i>
-              </span>
-                    <span class="navlink">Upload new</span>
-                </a>
-            </li>
+
         </ul>
         <ul class="menu_items">
             <div class="menu_title menu_setting"></div>
@@ -107,7 +99,7 @@
               <span class="navlink_icon">
                 <i class="bx bx-flag"></i>
               </span>
-                    <span class="navlink">Notice board</span>
+                    <span class="navlink">User</span>
                 </a>
             </li>
             <li class="item">
@@ -115,7 +107,7 @@
               <span class="navlink_icon">
                 <i class="bx bx-medal"></i>
               </span>
-                    <span class="navlink">Award</span>
+                    <span class="navlink">Tweet</span>
                 </a>
             </li>
             <li class="item">
@@ -123,7 +115,7 @@
               <span class="navlink_icon">
                 <i class="bx bx-cog"></i>
               </span>
-                    <span class="navlink">Setting</span>
+                    <span class="navlink">Role</span>
                 </a>
             </li>
             <li class="item">
@@ -131,7 +123,7 @@
               <span class="navlink_icon">
                 <i class="bx bx-layer"></i>
               </span>
-                    <span class="navlink">Features</span>
+                    <span class="navlink">Card</span>
                 </a>
             </li>
         </ul>
@@ -175,7 +167,7 @@
         </form>
     </div>
 
-    <div style="margin-left: 50px; margin-top: 20px; max-width: 800px;">
+    <div style="margin-left: 50px; margin-top: 20px; max-width: 600px;">
         <div class="card">
             <div class="card-body">
                 <p>
@@ -189,7 +181,7 @@
                 </p>
 
                 <p>
-                    <strong>Resumen del tweet:</strong> <br/>
+                    <strong>Resumen de comentarios del tweet:</strong> <br/>
                     {{ resumen }}
                 </p>
 
@@ -205,6 +197,9 @@
 
             </div>
         </div>
+    </div>
+    <div style="margin-left: 0px; margin-top: 20px; max-width: 300px;">
+        {{ grafico_html | safe }}
     </div>
 
 </nav>
