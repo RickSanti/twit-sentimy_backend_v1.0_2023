@@ -94,7 +94,18 @@ def home_admin():
             porc_pos = data["positive_percentage"]
 
             grafico_html = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
-            return render_template('home_admin.html', user=user, grafico_html=grafico_html,
+            grafico_html1 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+            grafico_html2 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+            grafico_html3 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+            grafico_html4 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+            grafico_html5 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+            return render_template('home_admin.html', user=user,
+                                   grafico_html=grafico_html,
+                                   grafico_html1=grafico_html1,
+                                   grafico_html2=grafico_html2,
+                                   grafico_html3=grafico_html3,
+                                   grafico_html4=grafico_html4,
+                                   grafico_html5=grafico_html5,
                                    tweet_cont=data["tweet_text"],
                                    polaridad=data["polarity"],
                                    resumen=data["summary"],

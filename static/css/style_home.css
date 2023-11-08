@@ -258,15 +258,14 @@ body.dark {
     left: -100%;
   }
 }
-
+.col-auto,.form-floating{
+  margin:0px !important;
+}
 /* principal */
 .principal {
-  position: fixed;
   width: 100%;
   height: 100%;
   background-color: var(--white-color);
-  display: flex;
-  z-index: -1;
   box-shadow: 0 0 2px var(--grey-color-light);
 }
 
