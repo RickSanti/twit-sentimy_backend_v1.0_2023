@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session
 import requests
 import json
 import plotly.express as px
+import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 
@@ -13,7 +14,8 @@ global web_user
 global web_pass
 global web_name_profile
 
-@app.route('/', methods=["GET","POST"])
+
+@app.route('/', methods=["GET", "POST"])
 def login():
     if request.method == "GET":
         return render_template('index.html')
@@ -27,28 +29,31 @@ def login():
             response = requests.get(url)
 
             data = response.json()
-            web_rol_id = data['idRole']
-            web_name_profile = data['name_profile']
-            web_id_user = data['idUser']
 
             if response.status_code == 200:
 
                 if list(data.keys())[0] == 'message_error':
                     return render_template('index.html')
 
-                if web_rol_id == 1:
-                    session['user'] = web_user
-                    session['profile'] = web_name_profile
-                    return redirect("/home_admin")
-                elif web_rol_id == 2:
-                    session['user'] = web_user
-                    session['profile'] = web_name_profile
-                    session['id_user'] = web_id_user
-                    return redirect("/home_basic")
-                elif web_rol_id == 3:
-                    session['user'] = web_user
-                    session['profile'] = web_name_profile
-                    return redirect("/home_premium")
+                else:
+
+                    web_rol_id = data['idRole']
+                    web_name_profile = data['name_profile']
+                    web_id_user = data['idUser']
+
+                    if web_rol_id == 1:
+                        session['user'] = web_user
+                        session['profile'] = web_name_profile
+                        return redirect("/home_admin")
+                    elif web_rol_id == 2:
+                        session['user'] = web_user
+                        session['profile'] = web_name_profile
+                        session['id_user'] = web_id_user
+                        return redirect("/home_basic")
+                    elif web_rol_id == 3:
+                        session['user'] = web_user
+                        session['profile'] = web_name_profile
+                        return redirect("/home_premium")
             else:
                 print(f'Error: {response.status_code}')
 
@@ -69,7 +74,8 @@ def login():
 
             return redirect("http://127.0.0.1:5000/home_basic")
 
-@app.route('/home_admin', methods=["GET","POST"])
+
+@app.route('/home_admin', methods=["GET", "POST"])
 def home_admin():
     if request.method == "GET":
         user = session.get('profile')
@@ -93,12 +99,13 @@ def home_admin():
             porc_neutro = data["neutral_percentage"]
             porc_pos = data["positive_percentage"]
 
-            grafico_html = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
-            grafico_html1 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
-            grafico_html2 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
-            grafico_html3 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+            grafico_html = grafico_porcentaje(porc_pos, "% Positivo", "green")
+            grafico_html1 = grafico_porcentaje(porc_neg, "% Negativo", "red")
+            grafico_html2 = grafico_porcentaje(porc_neutro, "% Neutro", "royalblue")
+            grafico_html3 = grafico_pastel(porc_pos, porc_neutro, porc_neg)
             grafico_html4 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
             grafico_html5 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+            grafico_html6 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
             return render_template('home_admin.html', user=user,
                                    grafico_html=grafico_html,
                                    grafico_html1=grafico_html1,
@@ -106,14 +113,16 @@ def home_admin():
                                    grafico_html3=grafico_html3,
                                    grafico_html4=grafico_html4,
                                    grafico_html5=grafico_html5,
+                                   grafico_html6=grafico_html6,
                                    tweet_cont=data["tweet_text"],
-                                   polaridad=data["polarity"],
-                                   resumen=data["summary"],
+                                   polaridad=card_polaridad2(data["polarity"]),
+                                   resumen=car_resumen(data["summary"]),
                                    top_pos=data["top_3_positives"],
                                    top_neg=data["top_3_negatives"]
                                    )
 
-@app.route('/home_basic', methods=["GET","POST"])
+
+@app.route('/home_basic', methods=["GET", "POST"])
 def home_basic():
     if request.method == "GET":
         user = session.get('profile')
@@ -147,7 +156,8 @@ def home_basic():
                                    top_neg=data["top_3_negatives"]
                                    )
 
-@app.route('/home_premium', methods=["GET","POST"])
+
+@app.route('/home_premium', methods=["GET", "POST"])
 def home_premium():
     if request.method == "GET":
         user = session.get('profile')
@@ -182,12 +192,10 @@ def home_premium():
                                    )
 
 
-
-
-def mostrar_grafico(neg,neu,pos):
+def mostrar_grafico(neg, neu, pos):
     if neu >= 70:
-        data = {'Polaridad':['Negativo','Positivo'],
-                'Porcentaje':[neg,pos]}
+        data = {'Polaridad': ['Negativo', 'Positivo'],
+                'Porcentaje': [neg, pos]}
     else:
         data = {'Polaridad': ['Negativo', 'Neutro', 'Positivo'],
                 'Porcentaje': [neg, neu, pos]}
@@ -197,7 +205,118 @@ def mostrar_grafico(neg,neu,pos):
     return grafico_html
 
 
+def grafico_porcentaje(indice, title, color):
+    # Valor porcentual
+    porcentaje = round(indice, 2)
+
+    # Crear un gráfico de medio aro
+    fig = px.pie(names=['', ''], values=[porcentaje, 100 - porcentaje],
+                 hole=0.5, color_discrete_sequence=['white', color],
+                 title=title)
+
+    # Configurar el diseño del gráfico
+    fig.update_layout(
+        showlegend=False,
+        annotations=[
+            dict(text=f'{porcentaje}%', x=0.5, y=0.5, font_size=20, showarrow=False)
+        ],
+        hovermode=False,
+        title_x=0.5, title_y=0.1,
+        title_font_size=20
+    )
+
+    fig.update_traces(textinfo='none', marker_line=dict(color='black', width=1.5))
+
+    grafico_html = fig.to_html(full_html=False)
+    return grafico_html
+
+
+def grafico_pastel(pos, neu, neg):
+    labels = ['% Positivo', '% Neutro', '% Negativo']
+    values = [pos, neu, neg]
+
+    fig = px.pie(names=labels, values=values, hole=0.7, color_discrete_sequence=['green', "royalblue", "red"],
+                 title="Porcentaje de polaridad")
+
+    fig.update_layout(
+        hovermode=False,
+        title_x=0.5, title_y=0.1,
+        title_font_size=20,
+        legend_x=0.375, legend_y=0.5,
+        legend_itemclick=False,
+        legend_itemdoubleclick=False
+    )
+
+    grafico_html = fig.to_html(full_html=False)
+    return grafico_html
+
+
+def card_polaridad(polarity):
+    if polarity == "positive" or polarity == "positivo":
+        polaridad = "Positivo"
+    elif polarity == "negative" or polarity == "negativo":
+        polaridad = "Negativo"
+    elif polarity == "neutral" or polarity == "neutro":
+        polaridad = "Neutro"
+
+    return """<div class="card" style="height: 45%; margin: 10px">
+                <div class="card-body">
+                    <h5 class="card-title">Polaridad</h5>
+                    <p class="card-text">""" + polaridad + """</p>
+                    
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">
+                        Información
+                    </button>
+                    
+                    <span style="min-height: 120px; height: 100%">
+                      <div class="collapse collapse-horizontal" id="collapseWidthExample">
+                        <div class="card card-body" style="width: 300px;">
+                          El sistema considera un porcentaje como 'neutro' solo cuando es menor al 70%; en otros casos, evalúa los porcentajes positivos y negativos.
+                        </div>
+                      </div>
+                    </span>
+                </div>
+            </div>"""
+
+
+def card_polaridad2(polarity):
+    if polarity == "positive" or polarity == "positivo":
+        polaridad = "Positivo"
+    elif polarity == "negative" or polarity == "negativo":
+        polaridad = "Negativo"
+    elif polarity == "neutral" or polarity == "neutro":
+        polaridad = "Neutro"
+
+    return """<div class="card" style="height: 45%; margin: 10px">
+                <div class="card-body">
+                    <h5 class="card-title">Polaridad</h5>
+                    <p class="card-text">""" + polaridad + """</p>
+
+                    <p class="d-inline-flex gap-1">
+                      <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        Link with href
+                      </a>
+                      <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        Button with data-bs-target
+                      </button>
+                    </p>
+                    <div class="collapse" id="collapseExample">
+                      <div class="card card-body">
+                        Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+                      </div>
+                    </div>
+                </div>
+            </div>"""
+
+
+def car_resumen(resumen):
+    return """<div class="card" style="height: 45%; margin: 10px">
+                    <div class="card-body">
+                        <h5 class="card-title">Resumen de los comentarios</h5>
+                        <textarea style="width: 100%; height: 80%; resize: none" readonly>""" + resumen + """</textarea>
+                    </div>
+                </div>"""
 
 
 if __name__ == "__main__":
-    app.run('0.0.0.0',port=5000,debug=True)
+    app.run('0.0.0.0', port=5000, debug=True)
