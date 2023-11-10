@@ -117,8 +117,8 @@ def home_admin():
                                    tweet_cont=data["tweet_text"],
                                    polaridad=card_polaridad2(data["polarity"]),
                                    resumen=car_resumen(data["summary"]),
-                                   top_pos=data["top_3_positives"],
-                                   top_neg=data["top_3_negatives"]
+                                   top_pos=comentarios_positivos(data["top_3_positives"]),
+                                   top_neg=comentarios_negativos(data["top_3_negatives"])
                                    )
 
 
@@ -211,7 +211,7 @@ def grafico_porcentaje(indice, title, color):
 
     # Crear un gráfico de medio aro
     fig = px.pie(names=['', ''], values=[porcentaje, 100 - porcentaje],
-                 hole=0.5, color_discrete_sequence=['white', color],
+                 hole=0.7, color_discrete_sequence=['white', color],
                  title=title)
 
     # Configurar el diseño del gráfico
@@ -287,22 +287,19 @@ def card_polaridad2(polarity):
     elif polarity == "neutral" or polarity == "neutro":
         polaridad = "Neutro"
 
-    return """<div class="card" style="height: 45%; margin: 10px">
+    return """<div class="card" style="margin: 10px; text-align: center;">
                 <div class="card-body">
                     <h5 class="card-title">Polaridad</h5>
                     <p class="card-text">""" + polaridad + """</p>
 
                     <p class="d-inline-flex gap-1">
                       <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                        Link with href
+                        Información
                       </a>
-                      <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                        Button with data-bs-target
-                      </button>
                     </p>
                     <div class="collapse" id="collapseExample">
                       <div class="card card-body">
-                        Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+                        El sistema considera un porcentaje como 'neutro' solo cuando es menor al 70%; en otros casos, evalúa los porcentajes positivos y negativos.
                       </div>
                     </div>
                 </div>
@@ -310,10 +307,65 @@ def card_polaridad2(polarity):
 
 
 def car_resumen(resumen):
-    return """<div class="card" style="height: 45%; margin: 10px">
+    return """<div class="card" style="margin: 10px; text-align: center;">
                     <div class="card-body">
                         <h5 class="card-title">Resumen de los comentarios</h5>
-                        <textarea style="width: 100%; height: 80%; resize: none" readonly>""" + resumen + """</textarea>
+                        <textarea style="width: 100%; height: 150px; resize: none; border: 0px" readonly>""" + resumen + """</textarea>
+                    </div>
+                </div>"""
+
+
+def comentarios_positivos(list_comentarios):
+    return """<div class="col-4">
+                    <h5 class="card-title" style="margin-bottom: 10px; margin-top: 20px">TOP 3 - Comentarios
+                        positivos</h5>
+                    <div id="list-example" class="list-group" style="margin-bottom: 20px; margin-top: 20px">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                           aria-expanded="false">Comentarios</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#list-item-1">Comentario 1</a></li>
+                            <li><a class="dropdown-item" href="#list-item-2">Comentario 2</a></li>
+                            <li><a class="dropdown-item" href="#list-item-3">Comentario 3</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="True"
+                         class="scrollspy-example" tabindex="0"
+                         style="height: 150px; overflow-y: scroll; margin-bottom: 20px; margin-top: 20px">
+                        <h4 id="list-item-1">Comentario 1</h4>
+                        <p>"""+list_comentarios[0]+"""</p>
+                        <h4 id="list-item-2">Comentario 2</h4>
+                        <p>"""+list_comentarios[1]+"""</p>
+                        <h4 id="list-item-3">Comentario 3</h4>
+                        <p>"""+list_comentarios[2]+"""</p>
+                    </div>
+                </div>"""
+
+
+def comentarios_negativos(list_comentarios):
+    return """<div class="col-4">
+                    <h5 class="card-title" style="margin-bottom: 10px; margin-top: 30px">TOP 3 - Comentarios negativos</h5>
+                    <div id="list-example" class="list-group" style="margin-bottom: 20px; margin-top: 30px">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                           aria-expanded="false">Comentarios</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#list-item-4">Comentario 1</a></li>
+                            <li><a class="dropdown-item" href="#list-item-5">Comentario 2</a></li>
+                            <li><a class="dropdown-item" href="#list-item-6">Comentario 3</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="True"
+                         class="scrollspy-example" tabindex="0"
+                         style="height: 150px; overflow-y: scroll; margin-bottom: 20px; margin-top: 30px">
+                        <h4 id="list-item-4">Comentario 1</h4>
+                        <p>"""+list_comentarios[0]+"""</p>
+                        <h4 id="list-item-5">Comentario 2</h4>
+                        <p>"""+list_comentarios[1]+"""</p>
+                        <h4 id="list-item-6">Comentario 3</h4>
+                        <p>"""+list_comentarios[2]+"""</p>
                     </div>
                 </div>"""
 

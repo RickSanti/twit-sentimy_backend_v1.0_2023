@@ -184,31 +184,29 @@
                 {{ grafico_html3 | safe }}
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4">
-                {{ polaridad | safe }}
-                {{ resumen | safe }}
+                <div class="row">
+                    <div class="col-12">
+                        {{ polaridad | safe }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        {{ resumen | safe }}
+                    </div>
+                </div>
+
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4">
-                hola
+                <div class="row">
+                    {{ top_pos | safe }}
+                </div>
+                <div class="row">
+                    {{ top_neg | safe }}
+                </div>
             </div>
         </div>
     </div>
 
-    <p class="d-inline-flex gap-1">
-        <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
-           aria-controls="collapseExample">
-            Link with href
-        </a>
-        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
-                aria-expanded="false" aria-controls="collapseExample">
-            Button with data-bs-target
-        </button>
-    </p>
-    <div class="collapse" id="collapseExample">
-        <div class="card card-body">
-            Some placeholder content for the collapse component. This panel is hidden by default but revealed when the
-            user activates the relevant trigger.
-        </div>
-    </div>
 
 </nav>
 
@@ -221,9 +219,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+<!--script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
         integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script-->
 <script src="../static/js/script_home.js"></script>
 <script src="../static/js/Principal.js"></script>
 

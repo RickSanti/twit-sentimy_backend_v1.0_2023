@@ -42,16 +42,5 @@ $(document).ready(function () {
         updatePrincipalPadding();
     });
 
-
-    const scrollSpy = new bootstrap.ScrollSpy(document.body, {
-        target: '#navbar-example'
-    });
-
-    const dataSpyList = document.querySelectorAll('[data-bs-spy="scroll"]')
-    dataSpyList.forEach(dataSpyEl => {
-        bootstrap.ScrollSpy.getInstance(dataSpyEl).refresh()
-    });
-
-
 });
 
