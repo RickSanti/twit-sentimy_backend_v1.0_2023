@@ -79,58 +79,76 @@
 
 <!-- Home -->
 <nav class="principal">
-    <div class="conteiner" style="margin-left: 20px; margin-top: 20px;">
-        <form action="/home_basic" method="post">
-            <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">ID Tweet</label>
-                <input type="text" class="form-control" id="id_tweet_home" name="id_tweet_home" placeholder="123456789"
-                       required>
+    <div class="container-fluid" style="padding:10px;">
+        <form action="/home_basic" method="post" class="row g-3"
+              style="padding:10px; place-items: center; padding:0px;">
+            <div class="col-auto">
+                <div class="form">
+                    <select class="form-select" aria-label="Floating label select example"
+                            id="id_tweet_home" name="id_tweet_home"
+                            style="height: 58px"
+                            required>
+                        <option selected>ID Tweet</option>
+                        <option value="1716462421181620400">Tweet Cueva</option>
+                        <option value="1718318502975561742">Tweet Surf Miguel</option>
+                        <option value="1718287932832776533">Tweet FNAF 1</option>
+                        <option value="1718304799869858103">Tweet FNAF 2</option>
+                    </select>
+                    <!--<label for="floatingSelect">ID User</label>-->
+                </div>
+                <!--<div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="id_tweet_home" name="id_tweet_home"
+                           placeholder="123456789" required>
+                    <label for="id_tweet_home">ID Tweet</label>
+                </div>-->
             </div>
-            <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">Name Tweet</label>
-                <input type="text" class="form-control" id="name_tweet_home" name="name_tweet_home"
-                       placeholder="Ejemplo 01" required>
+            <div class="col-auto">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="name_tweet_home" name="name_tweet_home"
+                           placeholder required>
+                    <label for="name_tweet_home">Name Tweet</label>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Buscar</button>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
         </form>
-    </div>
+        <div class="row" style="width: 100%;">
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                {{ grafico_html | safe }}
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                {{ grafico_html1 | safe }}
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                {{ grafico_html2 | safe }}
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                {{ grafico_html3 | safe }}
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="row">
+                    <div class="col-12">
+                        {{ polaridad | safe }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        {{ resumen | safe }}
+                    </div>
+                </div>
 
-    <div style="margin-left: 50px; margin-top: 20px; max-width: 600px;">
-        <div class="card">
-            <div class="card-body">
-                <p>
-                    <strong>Contenido del tweet:</strong> <br/>
-                    {{ tweet_cont }}
-                </p>
-
-                <p>
-                    <strong>Polaridad del tweet:</strong> <br/>
-                    {{ polaridad }}
-                </p>
-
-                <p>
-                    <strong>Resumen de comentarios del tweet:</strong> <br/>
-                    {{ resumen }}
-                </p>
-
-                <p>
-                    <strong>Top 3 de comentarios positivos:</strong> <br/>
-                    {{ top_pos }}
-                </p>
-
-                <p>
-                    <strong>Top 3 de comentarios negativos:</strong> <br/>
-                    {{ top_neg }}
-                </p>
-
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="row">
+                    {{ top_pos | safe }}
+                </div>
+                <div class="row">
+                    {{ top_neg | safe }}
+                </div>
             </div>
         </div>
     </div>
-    <div style="margin-left: 0px; margin-top: 20px; max-width: 300px;">
-        {{ grafico_html | safe }}
-        <img src="https://i.ytimg.com/vi/-H1kXOycWrs/maxresdefault.jpg" style="margin: 50px; width: 300px;">
-    </div>
-
 
 
 </nav>
@@ -144,9 +162,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+<!--script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
         integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script-->
 <script src="../static/js/script_home.js"></script>
 <script src="../static/js/Principal.js"></script>
 

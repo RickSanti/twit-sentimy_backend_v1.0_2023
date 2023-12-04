@@ -146,14 +146,26 @@ def home_basic():
             porc_neutro = data["neutral_percentage"]
             porc_pos = data["positive_percentage"]
 
-            grafico_html = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
-
-            return render_template('home_basic.html', user=user, grafico_html=grafico_html,
+            grafico_html = grafico_porcentaje(porc_pos, "% Positivo", "green")
+            grafico_html1 = grafico_porcentaje(porc_neg, "% Negativo", "red")
+            grafico_html2 = grafico_porcentaje(porc_neutro, "% Neutro", "royalblue")
+            grafico_html3 = grafico_pastel(porc_pos, porc_neutro, porc_neg)
+            grafico_html4 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+            grafico_html5 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+            grafico_html6 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+            return render_template('home_basic.html', user=user,
+                                   grafico_html=grafico_html,
+                                   grafico_html1=grafico_html1,
+                                   grafico_html2=grafico_html2,
+                                   grafico_html3=grafico_html3,
+                                   grafico_html4=grafico_html4,
+                                   grafico_html5=grafico_html5,
+                                   grafico_html6=grafico_html6,
                                    tweet_cont=data["tweet_text"],
-                                   polaridad=data["polarity"],
-                                   resumen=data["summary"],
-                                   top_pos=data["top_3_positives"],
-                                   top_neg=data["top_3_negatives"]
+                                   polaridad=card_polaridad2(data["polarity"]),
+                                   resumen=car_resumen(data["summary"]),
+                                   top_pos=comentarios_positivos(data["top_3_positives"]),
+                                   top_neg=comentarios_negativos(data["top_3_negatives"])
                                    )
 
 
@@ -181,14 +193,26 @@ def home_premium():
             porc_neutro = data["neutral_percentage"]
             porc_pos = data["positive_percentage"]
 
-            grafico_html = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
-
-            return render_template('home_premium.html', user=user, grafico_html=grafico_html,
+            grafico_html = grafico_porcentaje(porc_pos, "% Positivo", "green")
+            grafico_html1 = grafico_porcentaje(porc_neg, "% Negativo", "red")
+            grafico_html2 = grafico_porcentaje(porc_neutro, "% Neutro", "royalblue")
+            grafico_html3 = grafico_pastel(porc_pos, porc_neutro, porc_neg)
+            grafico_html4 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+            grafico_html5 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+            grafico_html6 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+            return render_template('home_premium.html', user=user,
+                                   grafico_html=grafico_html,
+                                   grafico_html1=grafico_html1,
+                                   grafico_html2=grafico_html2,
+                                   grafico_html3=grafico_html3,
+                                   grafico_html4=grafico_html4,
+                                   grafico_html5=grafico_html5,
+                                   grafico_html6=grafico_html6,
                                    tweet_cont=data["tweet_text"],
-                                   polaridad=data["polarity"],
-                                   resumen=data["summary"],
-                                   top_pos=data["top_3_positives"],
-                                   top_neg=data["top_3_negatives"]
+                                   polaridad=card_polaridad2(data["polarity"]),
+                                   resumen=car_resumen(data["summary"]),
+                                   top_pos=comentarios_positivos(data["top_3_positives"]),
+                                   top_neg=comentarios_negativos(data["top_3_negatives"])
                                    )
 
 
@@ -319,7 +343,7 @@ def comentarios_positivos(list_comentarios):
     return """<div class="col-4">
                     <h5 class="card-title" style="margin-bottom: 10px; margin-top: 20px">TOP 3 - Comentarios
                         positivos</h5>
-                    <div id="list-example" class="list-group" style="margin-bottom: 20px; margin-top: 20px">
+                    <!--<div id="list-example" class="list-group" style="margin-bottom: 20px; margin-top: 20px">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                            aria-expanded="false">Comentarios</a>
                         <ul class="dropdown-menu">
@@ -327,7 +351,7 @@ def comentarios_positivos(list_comentarios):
                             <li><a class="dropdown-item" href="#list-item-2">Comentario 2</a></li>
                             <li><a class="dropdown-item" href="#list-item-3">Comentario 3</a></li>
                         </ul>
-                    </div>
+                    </div>-->
                 </div>
                 <div class="col-8">
                     <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="True"
@@ -346,7 +370,7 @@ def comentarios_positivos(list_comentarios):
 def comentarios_negativos(list_comentarios):
     return """<div class="col-4">
                     <h5 class="card-title" style="margin-bottom: 10px; margin-top: 30px">TOP 3 - Comentarios negativos</h5>
-                    <div id="list-example" class="list-group" style="margin-bottom: 20px; margin-top: 30px">
+                    <!--<div id="list-example" class="list-group" style="margin-bottom: 20px; margin-top: 30px">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                            aria-expanded="false">Comentarios</a>
                         <ul class="dropdown-menu">
@@ -354,7 +378,7 @@ def comentarios_negativos(list_comentarios):
                             <li><a class="dropdown-item" href="#list-item-5">Comentario 2</a></li>
                             <li><a class="dropdown-item" href="#list-item-6">Comentario 3</a></li>
                         </ul>
-                    </div>
+                    </div>-->
                 </div>
                 <div class="col-8">
                     <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="True"
