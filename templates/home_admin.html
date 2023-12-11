@@ -13,6 +13,17 @@
 
 </head>
 <body>
+<!--div class="container" id="nuevo_boton">
+
+    <div class="container-fluid">
+        <button class="btn btn-primary float-end" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+            <span role="status">Loading...</span>
+        </button>
+    </div>
+
+</div-->
+{{ html_personalizado|safe }}
 <!-- navbar -->
 <nav class="navbar">
     <div class="logo_item">
@@ -150,7 +161,7 @@
 <!-- Home -->
 <nav class="principal">
     <div class="container-fluid" style="padding:10px;">
-        <form action="/home_admin" method="post" class="row g-3"
+        <form action="/home_admin" method="post" class="row g-3" id="buscar_carga" name="buscar_carga"
               style="padding:10px; place-items: center; padding:0px;">
             <div class="col-auto">
                 <!--<div class="form-floating mb-3">
@@ -200,7 +211,8 @@
                 </div>
             </div>
             <div class="col-auto">
-                <button type="submit" class="btn btn-primary">Buscar</button>
+                <button type="submit" class="btn btn-primary" id="buscar">Buscar</button>
+
             </div>
 
         </form>
@@ -259,6 +271,7 @@
         crossorigin="anonymous"></script-->
 <script src="../static/js/script_home.js"></script>
 <script src="../static/js/Principal.js"></script>
+<!--script src="../static/js/CargaMod.js"></script-->
 
 </body>
 </html>

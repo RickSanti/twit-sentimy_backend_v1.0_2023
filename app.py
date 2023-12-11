@@ -106,6 +106,20 @@ def home_admin():
             grafico_html4 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
             grafico_html5 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
             grafico_html6 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+            html_personalizado = """
+                <div class="clearfix" id="nuevo_boton">    
+                    <button class="btn btn-primary float-end" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                        <span role="status">Loading...</span>
+                    </button>
+                </div>
+                <script>
+                    var myButton = document.getElementById('nuevo_boton');
+                    setTimeout(function () {
+                        myButton.style.display = 'none';
+                    }, 3000);
+                </script>
+                """
             return render_template('home_admin.html', user=user,
                                    grafico_html=grafico_html,
                                    grafico_html1=grafico_html1,
@@ -118,7 +132,8 @@ def home_admin():
                                    polaridad=card_polaridad2(data["polarity"]),
                                    resumen=car_resumen(data["summary"]),
                                    top_pos=comentarios_positivos(data["top_3_positives"]),
-                                   top_neg=comentarios_negativos(data["top_3_negatives"])
+                                   top_neg=comentarios_negativos(data["top_3_negatives"]),
+                                   html_personalizado = html_personalizado
                                    )
 
 
@@ -153,6 +168,20 @@ def home_basic():
             grafico_html4 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
             grafico_html5 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
             grafico_html6 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+            html_personalizado = """
+                            <div class="clearfix" id="nuevo_boton">    
+                                <button class="btn btn-primary float-end" type="button" disabled>
+                                    <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                    <span role="status">Loading...</span>
+                                </button>
+                            </div>
+                            <script>
+                                var myButton = document.getElementById('nuevo_boton');
+                                setTimeout(function () {
+                                    myButton.style.display = 'none';
+                                }, 3000);
+                            </script>
+                            """
             return render_template('home_basic.html', user=user,
                                    grafico_html=grafico_html,
                                    grafico_html1=grafico_html1,
@@ -165,7 +194,8 @@ def home_basic():
                                    polaridad=card_polaridad2(data["polarity"]),
                                    resumen=car_resumen(data["summary"]),
                                    top_pos=comentarios_positivos(data["top_3_positives"]),
-                                   top_neg=comentarios_negativos(data["top_3_negatives"])
+                                   top_neg=comentarios_negativos(data["top_3_negatives"]),
+                                   html_personalizado = html_personalizado
                                    )
 
 
@@ -200,6 +230,20 @@ def home_premium():
             grafico_html4 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
             grafico_html5 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
             grafico_html6 = mostrar_grafico(porc_neg, porc_neutro, porc_pos)
+            html_personalizado = """
+                            <div class="clearfix" id="nuevo_boton">    
+                                <button class="btn btn-primary float-end" type="button" disabled>
+                                    <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                    <span role="status">Loading...</span>
+                                </button>
+                            </div>
+                            <script>
+                                var myButton = document.getElementById('nuevo_boton');
+                                setTimeout(function () {
+                                    myButton.style.display = 'none';
+                                }, 3000);
+                            </script>
+                            """
             return render_template('home_premium.html', user=user,
                                    grafico_html=grafico_html,
                                    grafico_html1=grafico_html1,
@@ -212,7 +256,8 @@ def home_premium():
                                    polaridad=card_polaridad2(data["polarity"]),
                                    resumen=car_resumen(data["summary"]),
                                    top_pos=comentarios_positivos(data["top_3_positives"]),
-                                   top_neg=comentarios_negativos(data["top_3_negatives"])
+                                   top_neg=comentarios_negativos(data["top_3_negatives"]),
+                                   html_personalizado = html_personalizado
                                    )
 
 
